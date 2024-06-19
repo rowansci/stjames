@@ -13,6 +13,7 @@ from .grid_settings import *
 from .settings import *
 
 from .method import *
+from .message import *
 from .basis_set import *
 from .task import *
 from .correction import *
