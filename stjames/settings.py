@@ -2,10 +2,10 @@ from typing import Any, Optional, TypeVar
 
 import pydantic
 
+from . import method
 from .base import Base, UniqueList
 from .basis_set import BasisSet
 from .correction import Correction
-from . import method
 from .mode import Mode
 from .opt_settings import OptimizationSettings
 from .scf_settings import SCFSettings

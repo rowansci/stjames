@@ -1,5 +1,4 @@
 from .base import Base
-from typing import ClassVar
 
 
 class Method(Base):
