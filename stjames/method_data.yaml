@@ -1,0 +1,70 @@
+HARTREE_FOCK:
+  name: hf
+  display_name: HF
+  corrections_allowed: true
+  basis_sets_allowed: true
+HF3C:
+  name: hf_3c
+  display_name: HF-3c
+  corrections_allowed: false
+  basis_sets_allowed: false
+PBE:
+  name: pbe
+  display_name: PBE
+  corrections_allowed: true
+  basis_sets_allowed: true
+B973C:
+  name: b97_3c
+  display_name: B97-3c
+  corrections_allowed: false
+  basis_sets_allowed: false
+R2SCAN:
+  name: r2scan
+  display_name: r2SCAN
+  corrections_allowed: true
+  basis_sets_allowed: true
+R2SCAN3C:
+  name: r2scan_3c
+  display_name: r2SCAN-3c
+  corrections_allowed: false
+  basis_sets_allowed: false
+
+    # # mGGA
+    # R2SCAN = "r2scan"
+    # R2SCAN3C = "r2scan3c"
+    # TPSS = "tpss"
+    # M06L = "m06l"
+    #
+    # # hybrid GGA
+    # PBE0 = "pbe0"
+    # B3LYP = "b3lyp"
+    # # B3PW91 = "b3pw91"
+    # # B97MV = "b97m_v"
+    #
+    # # hybrid mGGA
+    # TPSSH = "tpssh"
+    # M06 = "m06"
+    # M062X = "m062x"
+    #
+    # # range-separated
+    # CAMB3LYP = "camb3lyp"
+    # # WB97XD = "wb97x_d"
+    # WB97XD3 = "wb97x_d3"
+    # # WB97XD4 = "wb97x_d4"
+    # WB97XV = "wb97x_v"
+    # WB97MV = "wb97m_v"
+    # WB97MD3BJ = "wb97m_d3bj"
+    # WB97X3C = "wb97x_3c"
+    #
+    # # double hybrids
+    # DSD_BLYPD3BJ = "dsd_b3lyp_d3bj"
+    #
+    # # ML methods
+    # AIMNET2_WB97MD3 = "aimnet2_wb97md3"
+    # # AIMNET2_B973C = "aimnet2_b973c"
+    #
+    # # xTB methods
+    # # GFN0_XTB = "gfn1_xtb"
+    # GFN1_XTB = "gfn1_xtb"
+    # GFN2_XTB = "gfn2_xtb"
+    # GFN_FF = "gfn_ff"

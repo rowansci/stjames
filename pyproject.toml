@@ -11,6 +11,8 @@ authors = [
 dependencies = [
     "pydantic>=2.4",
     "numpy",
+    "pyyaml",
+    "types-PyYAML",
 ]
 
 [build-system]
@@ -27,6 +29,9 @@ where = ["."]  # list of folders that contain the packages (["."] by default)
 include = ["stjames", "stjames.*"]  # package names should match these glob patterns (["*"] by default)
 exclude = []  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml"]
 
 [tool.ruff]
 line-length = 160

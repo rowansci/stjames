@@ -5,7 +5,7 @@ import pydantic
 from .base import Base, UniqueList
 from .basis_set import BasisSet
 from .correction import Correction
-from .method import Method
+from . import method
 from .mode import Mode
 from .opt_settings import OptimizationSettings
 from .scf_settings import SCFSettings
@@ -13,28 +13,11 @@ from .solvent import SolventSettings
 from .task import Task
 from .thermochem_settings import ThermochemistrySettings
 
-PREPACKAGED_METHODS = [
-    Method.HF3C,
-    Method.B973C,
-    Method.AIMNET2_WB97MD3,
-    Method.AIMNET2_B973C,
-    Method.GFN2_XTB,
-    Method.GFN1_XTB,
-]
-
-METHODS_WITH_CORRECTION = [
-    Method.B97D3,
-    Method.WB97XD,
-    Method.WB97XD3,
-    Method.WB97XV,
-    Method.WB97MV,
-]
-
 T = TypeVar("T")
 
 
 class Settings(Base):
-    method: Method = Method.HARTREE_FOCK
+    method: Method = method.HARTREE_FOCK
     basis_set: Optional[BasisSet] = None
     tasks: UniqueList[Task] = [Task.ENERGY, Task.CHARGE, Task.DIPOLE]
     corrections: UniqueList[Correction] = []
@@ -54,12 +37,13 @@ class Settings(Base):
     def level_of_theory(self) -> str:
         corrections = list(filter(lambda x: x not in (None, ""), self.corrections))
 
-        if self.method in PREPACKAGED_METHODS or self.basis_set is None:
-            method = self.method.value
-        elif self.method in METHODS_WITH_CORRECTION or len(corrections) == 0:
-            method = f"{self.method.value}/{self.basis_set.name.lower()}"
-        else:
-            method = f"{self.method.value}-{'-'.join([c.value for c in corrections])}/{self.basis_set.name.lower()}"
+        method = self.method.name
+
+        if self.method.corrections_allowed and len(corrections) > 0:
+            method += f"-{'-'.join([c.value for c in corrections])}"
+
+        if self.method.basis_set_allowed and self.basis_set is not None:
+            method += f"/{self.basis_set.name.lower()}"
 
         if self.solvent_settings is not None:
             method += f"/{self.solvent_settings.model.value}({self.solvent_settings.solvent.value})"
@@ -75,15 +59,22 @@ class Settings(Base):
             self.tasks.append(Task.OPTIMIZE)
             self.opt_settings.transition_state = True
 
-        # composite methods have their own basis sets, so overwrite user stuff
-        if self.method == Method.HF3C:
-            self.basis_set = BasisSet(name="minix")
-        elif self.method == Method.B973C:
-            self.basis_set = BasisSet(name="mTZVP")
+    @pydantic.field_validator("method", mode="before")
+    @classmethod
+    def parse_method(cls, v: Any) -> method.Method:
+        if isinstance(v, method.Method):
+            return v
+        elif isinstance(v, str):
+            try:
+                return getattr(method, v)
+            except AttributeError:
+                raise ValueError(f"Invalid method `{v}`!")
+        else:
+            raise ValueError(f"Invalid method `{v}`!")
 
     @pydantic.field_validator("basis_set", mode="before")
     @classmethod
-    def parse_basis_set(cls, v: Any) -> BasisSet | dict | None:
+    def parse_basis_set(cls, v: Any) -> BasisSet | None:
         """Turn a string into a ``BasisSet`` object. (This is a little crude.)"""
         if isinstance(v, BasisSet):
             return None if v.name is None else v
